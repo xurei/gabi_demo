@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gabi_example/pages/temperature.dart';
 
-import 'components/layout/dashboard-section.dart';
-import 'components/layout/main-layout.dart';
+import 'components/layout/dashboard_section.dart';
+import 'components/layout/main_layout.dart';
 
 void main() => runApp(MyApp());
 

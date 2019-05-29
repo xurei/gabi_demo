@@ -1,7 +1,12 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:math';
 
-import '../components/layout/dashboard-section.dart';
+import 'package:flutter/material.dart';
+import 'package:gabi_example/components/layout/monitor_view.dart';
+import 'package:gabi_example/model/data_point.dart';
 import 'page.dart';
+
+var rand = new Random();
 
 class TemperaturePage extends Page {
     TemperaturePage({Key key}) : super(
@@ -14,50 +19,53 @@ class TemperaturePage extends Page {
 }
 
 class _TemperaturePageState extends State<TemperaturePage> {
-    int _counter = 0;
     bool menuOpen = false;
-    GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+    List<DataPoint> data = [
+      DataPoint(t: DateTime.now().add(new Duration(seconds: -1)), v: 37.3),
+      DataPoint(t: DateTime.now(), v: 37.4),
+    ];
 
-    void _incrementCounter() {
+    Timer timer = null;
+
+    double curV = 37.1;
+
+    @override
+    initState() {
+      super.initState();
+
+      this.timer = new Timer.periodic(const Duration(seconds: 1), (_) =>
         setState(() {
-            _counter++;
-        });
+          curV = curV + (rand.nextDouble()-0.5) * 0.7;
+
+          if (data.length > 50) {
+            var newData = data.sublist(data.length - 50);
+            newData.add(DataPoint(t: DateTime.now(), v: curV));
+            data = newData;
+          }
+          else {
+            var newData = data.sublist(0);
+            newData.add(DataPoint(t: DateTime.now(), v: curV));
+            data = newData;
+          }
+        })
+      );
     }
 
     @override
     Widget build(BuildContext context) {
-        return Center(
-            child: ListView(
-                children: <Widget>[
-                    DashboardSection(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                              Text(
-                                  '37°',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 50),
-                              ),
-                              Text(
-                                  'In normal range',
-                                  textAlign: TextAlign.center,
-                              ),
-                              Text(
-                                  this.menuOpen ? 'open' : 'close',
-                                  textAlign: TextAlign.center,
-                              ),
-                          ],
-                      )),
-                    Text(
-                        'You have clicked the button this many times:',
-                        textAlign: TextAlign.center,
-                    ),
-                    Text(
-                        '$_counter',
-                        style: Theme.of(context).textTheme.display1,
-                    ),
-                ],
-            ),
+        return MonitorView(
+            data: data,
+            unit: '°C',
+            rangeMin: 34,
+            rangeMax: 41,
+            rangeAlertMin: 37,
+            rangeAlertMax: 38,
         );
+    }
+
+    @override
+    dispose() {
+      super.dispose();
+      timer.cancel();
     }
 }

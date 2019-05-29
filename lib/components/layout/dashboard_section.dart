@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 class DashboardSection extends StatelessWidget {
     // a property on this class
     final Widget child;
+    final double height;
+    final Color color;
 
     DashboardSection({
         Key key,
-        this.child
+        this.child,
+        this.height = 300,
+        this.color,
     }) : super(key: key);
 
     @override
@@ -20,11 +24,11 @@ class DashboardSection extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(1.0),
           margin: const EdgeInsets.all(5.0),
-          height: 300,
-          color: Colors.blueGrey[900],
+          height: this.height,
+          color: this.color,
           child: Container(
               padding: const EdgeInsets.all(8.0),
-              height: 300,
+              height: this.height,
               color: Colors.black87,
               child: this.child,
           )
