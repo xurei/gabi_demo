@@ -4,9 +4,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:gabi_example/components/layout/monitor_view.dart';
 import 'package:gabi_example/model/data_point.dart';
+import 'package:gabi_example/services/gabi-backend-service.dart';
 import 'page.dart';
 
-var rand = new Random();
+var backendService = new GabiBackendService();
 
 class O2SatPage extends Page {
   O2SatPage({Key key}) : super(
@@ -25,15 +26,14 @@ class _O2SatPageState extends State<O2SatPage> {
     DataPoint(t: DateTime.now(), v: 93.4),
   ];
 
-  Timer timer = null;
-
-  double curV = 94;
+  Timer timer;
 
   @override
   initState() {
     super.initState();
 
-    this.timer = new Timer.periodic(const Duration(seconds: 1), (_) =>
+    double curV = 94;
+    this.timer = backendService.listenTemperature((datapoint) =>
       setState(() {
         curV = curV + (rand.nextDouble()-0.5) * 1;
 

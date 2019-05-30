@@ -4,9 +4,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:gabi_example/components/layout/monitor_view.dart';
 import 'package:gabi_example/model/data_point.dart';
+import 'package:gabi_example/services/gabi-backend-service.dart';
 import 'page.dart';
 
-var rand = new Random();
+var backendService = new GabiBackendService();
 
 class TemperaturePage extends Page {
     TemperaturePage({Key key}) : super(
@@ -25,26 +26,22 @@ class _TemperaturePageState extends State<TemperaturePage> {
       DataPoint(t: DateTime.now(), v: 37.4),
     ];
 
-    Timer timer = null;
-
-    double curV = 37.1;
+    Timer timer;
 
     @override
     initState() {
       super.initState();
 
-      this.timer = new Timer.periodic(const Duration(seconds: 1), (_) =>
+      this.timer = backendService.listenTemperature((datapoint) =>
         setState(() {
-          curV = curV + (rand.nextDouble()-0.5) * 0.7;
-
           if (data.length > 50) {
             var newData = data.sublist(data.length - 50);
-            newData.add(DataPoint(t: DateTime.now(), v: curV));
+            newData.add(datapoint);
             data = newData;
           }
           else {
             var newData = data.sublist(0);
-            newData.add(DataPoint(t: DateTime.now(), v: curV));
+            newData.add(datapoint);
             data = newData;
           }
         })
