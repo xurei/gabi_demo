@@ -35,7 +35,7 @@ class _O2SatPageState extends State<O2SatPage> {
 
     this.timer = new Timer.periodic(const Duration(seconds: 1), (_) =>
       setState(() {
-        curV = curV + (rand.nextDouble()-0.5) * 0.7;
+        curV = curV + (rand.nextDouble()-0.5) * 1;
 
         if (data.length > 50) {
           var newData = data.sublist(data.length - 50);

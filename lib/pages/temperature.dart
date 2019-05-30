@@ -57,7 +57,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
             data: data,
             unit: '°C',
             rangeMin: 34,
-            rangeMax: 41,
+            rangeMax: 42,
             rangeAlertMin: 37,
             rangeAlertMax: 38,
         );
